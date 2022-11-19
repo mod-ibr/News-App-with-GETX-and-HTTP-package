@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:news_app_getx_http/controller/News_controller.dart';
+import 'package:news_app_getx_http/model/nes_moel.dart';
+
+class Science extends GetWidget {
+  @override
+  Widget build(BuildContext context) {
+    NewsController controller = Get.put(NewsController());
+    return Scaffold(
+      body: FutureBuilder<Articles>(
+          future: controller.getData("Science"),
+          builder: (context, AsyncSnapshot<Articles> snapshot) {
+            if (snapshot.hasData || snapshot.data != null) {
+              var data = snapshot.data;
+              return ListView.builder(
+                  itemCount: data!.articles!.length,
+                  itemBuilder: (context, int index) {
+                    return Card(
+                      elevation: 10,
+                      shadowColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 150,
+                            child: Image.network(
+                              data.articles![index].urlToImage.toString(),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          Text(
+                            data.articles![index].title.toString(),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            textDirection: TextDirection.rtl,
+                          ),
+                          Text(
+                            data.articles![index].description.toString(),
+                            style: TextStyle(fontSize: 15, color: Colors.grey),
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+    );
+  }
+}
